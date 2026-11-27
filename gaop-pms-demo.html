@@ -1,0 +1,2445 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zentrum für Geschlechtsangleichende Chirurgie – Patientenportal</title>
+  <style>
+    /* ==========================================================================
+       DESIGN-TOKENS & BASIS-STYLES (Keine externen Abhängigkeiten)
+       ========================================================================== */
+    :root {
+      --bg-page: #f6f8f7;
+      --bg-card: #ffffff;
+      --bg-subtle: #f1f5f3;
+      --bg-muted: #f8fafc;
+
+      --text-main: #0f172a;
+      --text-secondary: #334155;
+      --text-muted: #64748b;
+
+      --border-light: #e2e8f0;
+      --border-medium: #cbd5e1;
+
+      /* Salbei- / Smaragdgrün */
+      --green-primary: #16a34a;
+      --green-emerald: #059669;
+      --green-dark: #14532d;
+      --green-soft: #dcfce7;
+      --green-tint: #f0fdf4;
+      --green-border: #86efac;
+
+      /* Fokus-Blau */
+      --blue-primary: #2563eb;
+      --blue-dark: #1d4ed8;
+      --blue-soft: #dbeafe;
+      --blue-tint: #eff6ff;
+      --blue-border: #93c5fd;
+
+      /* Warme Statusfarben: Bernstein (Prüfung) & Koralle/Orange (Rückfragen) */
+      --amber-primary: #d97706;
+      --amber-soft: #fef3c7;
+      --amber-tint: #fffbeb;
+      --amber-border: #fcd34d;
+
+      --orange-primary: #ea580c;
+      --orange-soft: #ffedd5;
+      --orange-tint: #fff7ed;
+      --orange-border: #fdba74;
+
+      /* Gesperrt (Grau) */
+      --locked-primary: #64748b;
+      --locked-bg: #f1f5f9;
+      --locked-border: #cbd5e1;
+
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-full: 9999px;
+
+      --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.05);
+      --shadow-md: 0 4px 14px -2px rgba(15, 23, 42, 0.07), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+      --shadow-lg: 0 12px 28px -6px rgba(15, 23, 42, 0.14);
+
+      --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 120px; /* Platz für fixierten Klinik-Simulator */
+    }
+
+    /* ==========================================================================
+       HEADER & PERSÖNLICHE BEGRÜSSUNG
+       ========================================================================== */
+    .app-header {
+      background-color: var(--bg-card);
+      border-bottom: 1px solid var(--border-light);
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .header-inner {
+      max-width: 1020px;
+      margin: 0 auto;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      border-bottom: 1px solid var(--bg-subtle);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 11px;
+      background: linear-gradient(135deg, var(--green-emerald), var(--green-primary));
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(5, 150, 105, 0.25);
+    }
+
+    .brand-title {
+      font-size: 1.02rem;
+      font-weight: 700;
+      color: var(--text-main);
+      letter-spacing: -0.01em;
+      display: block;
+    }
+
+    .brand-sub {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      display: block;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .greeting-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background-color: var(--green-tint);
+      border: 1px solid var(--green-border);
+      color: var(--green-dark);
+      padding: 6px 13px;
+      border-radius: var(--radius-full);
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .greeting-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--green-primary);
+    }
+
+    .btn-reset {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 13px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border-medium);
+      background-color: #ffffff;
+      color: var(--text-secondary);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .btn-reset:hover {
+      background-color: var(--bg-subtle);
+      color: var(--text-main);
+    }
+
+    /* ==========================================================================
+       4-SCHRITTE-FORTSCHRITTSLEISTE ("BUBBLES")
+       ========================================================================== */
+    .stepper-section {
+      max-width: 1020px;
+      margin: 0 auto;
+      padding: 18px 20px 16px;
+      overflow-x: auto;
+    }
+
+    .stepper-track {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(150px, 1fr));
+      position: relative;
+      gap: 8px;
+    }
+
+    .stepper-connector {
+      position: absolute;
+      top: 23px;
+      left: 12.5%;
+      right: 12.5%;
+      height: 3px;
+      background-color: var(--border-light);
+      z-index: 1;
+      border-radius: 2px;
+    }
+
+    .step-node {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      background: none;
+      border: none;
+      padding: 4px 6px;
+      cursor: pointer;
+      transition: var(--transition);
+      border-radius: var(--radius-md);
+    }
+
+    .step-node.is-locked {
+      cursor: not-allowed;
+      opacity: 0.78;
+    }
+
+    .step-node:not(.is-locked):hover {
+      background-color: rgba(241, 245, 243, 0.7);
+    }
+
+    .step-node.is-viewing {
+      background-color: var(--blue-tint);
+      box-shadow: inset 0 0 0 1.5px var(--blue-border);
+    }
+
+    .bubble-circle {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background-color: #ffffff;
+      border: 2.5px solid var(--border-medium);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 8px;
+      transition: var(--transition);
+      position: relative;
+    }
+
+    /* 6 Bubble-Status-Designs */
+    /* 1. gesperrt */
+    .status-gesperrt .bubble-circle {
+      background-color: var(--locked-bg);
+      border-color: var(--locked-border);
+      color: var(--locked-primary);
+    }
+
+    /* 2. offen/aktiv */
+    .status-offen .bubble-circle {
+      background-color: #ffffff;
+      border-color: var(--green-primary);
+      color: var(--blue-primary);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.14);
+      animation: pulseRing 2.4s infinite;
+    }
+
+    @keyframes pulseRing {
+      0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.25); }
+      70% { box-shadow: 0 0 0 7px rgba(37, 99, 235, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+    }
+
+    /* 3. daten übermittelt */
+    .status-uebermittelt .bubble-circle {
+      background-color: var(--green-tint);
+      border-color: var(--green-emerald);
+      color: var(--green-emerald);
+    }
+
+    /* 4. in prüfung */
+    .status-pruefung .bubble-circle {
+      background-color: var(--amber-tint);
+      border-color: var(--amber-primary);
+      color: var(--amber-primary);
+    }
+
+    /* 5. rückfragen/offen/aktiv */
+    .status-rueckfragen .bubble-circle {
+      background-color: var(--orange-tint);
+      border-color: var(--orange-primary);
+      color: var(--orange-primary);
+      box-shadow: 0 0 0 4px rgba(234, 88, 12, 0.14);
+    }
+
+    /* 6. abgeschlossen */
+    .status-abgeschlossen .bubble-circle {
+      background-color: var(--green-primary);
+      border-color: var(--green-primary);
+      color: #ffffff;
+    }
+
+    .step-title {
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.25;
+      margin-bottom: 5px;
+    }
+
+    .status-gesperrt .step-title {
+      color: var(--text-muted);
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 9px;
+      border-radius: var(--radius-full);
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+    }
+
+    .status-gesperrt .status-pill {
+      background-color: var(--locked-bg);
+      color: var(--locked-primary);
+      border: 1px solid var(--locked-border);
+    }
+
+    .status-offen .status-pill {
+      background-color: var(--blue-soft);
+      color: var(--blue-dark);
+      border: 1px solid var(--blue-border);
+    }
+
+    .status-uebermittelt .status-pill {
+      background-color: var(--green-soft);
+      color: var(--green-dark);
+      border: 1px solid var(--green-border);
+    }
+
+    .status-pruefung .status-pill {
+      background-color: var(--amber-soft);
+      color: #92400e;
+      border: 1px solid var(--amber-border);
+    }
+
+    .status-rueckfragen .status-pill {
+      background-color: var(--orange-soft);
+      color: #9a3412;
+      border: 1px solid var(--orange-border);
+    }
+
+    .status-abgeschlossen .status-pill {
+      background-color: var(--green-soft);
+      color: var(--green-dark);
+      border: 1px solid var(--green-border);
+    }
+
+    /* ==========================================================================
+       HAUPT-CONTENT-BEREICH
+       ========================================================================== */
+    .main-wrap {
+      max-width: 900px;
+      width: 100%;
+      margin: 26px auto 0;
+      padding: 0 20px;
+      flex: 1;
+    }
+
+    .card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+      animation: fadeUp 0.22s ease-out;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0.7; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-header {
+      padding: 24px 28px 20px;
+      border-bottom: 1px solid var(--bg-subtle);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .step-kicker {
+      font-size: 0.76rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--green-emerald);
+      margin-bottom: 4px;
+      display: block;
+    }
+
+    .card-title {
+      font-size: 1.38rem;
+      font-weight: 700;
+      color: var(--text-main);
+      letter-spacing: -0.015em;
+    }
+
+    .card-subtitle {
+      font-size: 0.93rem;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    .card-body {
+      padding: 26px 28px;
+    }
+
+    .card-footer {
+      padding: 18px 28px;
+      background-color: var(--bg-muted);
+      border-top: 1px solid var(--border-light);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* ==========================================================================
+       FORMULARE, KARTEN & KOMPONENTEN
+       ========================================================================== */
+    .section-block {
+      margin-bottom: 26px;
+    }
+
+    .section-block:last-child {
+      margin-bottom: 0;
+    }
+
+    .section-heading {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-hint {
+      font-size: 0.83rem;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .field-label {
+      font-size: 0.83rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .input, .select, .textarea {
+      width: 100%;
+      padding: 10px 13px;
+      border: 1.5px solid var(--border-medium);
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: 0.93rem;
+      color: var(--text-main);
+      background-color: #ffffff;
+      transition: var(--transition);
+    }
+
+    .input:focus, .select:focus, .textarea:focus {
+      outline: none;
+      border-color: var(--blue-primary);
+      box-shadow: 0 0 0 3px var(--blue-soft);
+    }
+
+    .textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    /* Wunschnamen & Wunschanrede Box */
+    .preferred-name-box {
+      border: 1.5px solid var(--border-light);
+      background-color: var(--bg-subtle);
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
+      transition: var(--transition);
+    }
+
+    .preferred-name-box.is-active {
+      background-color: var(--green-tint);
+      border-color: var(--green-border);
+    }
+
+    .checkbox-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .checkbox-header input[type="checkbox"] {
+      width: 19px;
+      height: 19px;
+      accent-color: var(--green-primary);
+      margin-top: 2px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .preferred-fields {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(22, 163, 74, 0.2);
+      animation: fadeUp 0.2s ease-out;
+    }
+
+    .live-preview-banner {
+      margin-top: 12px;
+      padding: 10px 14px;
+      background-color: #ffffff;
+      border: 1px solid var(--green-border);
+      border-radius: var(--radius-sm);
+      font-size: 0.84rem;
+      color: var(--green-dark);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Info- & Status-Banner */
+    .banner {
+      padding: 15px 18px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: flex-start;
+      gap: 13px;
+      margin-bottom: 20px;
+      font-size: 0.9rem;
+    }
+
+    .banner-icon {
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .banner-info {
+      background-color: var(--blue-tint);
+      border: 1px solid var(--blue-border);
+      color: #1e3a8a;
+    }
+
+    .banner-success {
+      background-color: var(--green-tint);
+      border: 1px solid var(--green-border);
+      color: var(--green-dark);
+    }
+
+    .banner-amber {
+      background-color: var(--amber-tint);
+      border: 1px solid var(--amber-border);
+      color: #78350f;
+    }
+
+    .banner-orange {
+      background-color: var(--orange-tint);
+      border: 1.5px solid var(--orange-primary);
+      color: #7c2d12;
+    }
+
+    .banner-locked {
+      background-color: var(--locked-bg);
+      border: 1px solid var(--locked-border);
+      color: var(--text-secondary);
+    }
+
+    /* Terminvorschlag-Karten */
+    .slot-card {
+      border: 1.5px solid var(--border-medium);
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
+      background-color: #ffffff;
+      cursor: pointer;
+      transition: var(--transition);
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      position: relative;
+    }
+
+    .slot-card:hover {
+      border-color: var(--blue-primary);
+      background-color: var(--bg-muted);
+    }
+
+    .slot-card.selected {
+      border-color: var(--green-primary);
+      background-color: var(--green-tint);
+      box-shadow: 0 0 0 1.5px var(--green-primary);
+    }
+
+    .slot-badge {
+      display: inline-block;
+      font-size: 0.74rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      background-color: var(--bg-subtle);
+      color: var(--text-secondary);
+      align-self: flex-start;
+    }
+
+    .slot-card.selected .slot-badge {
+      background-color: var(--green-primary);
+      color: #ffffff;
+    }
+
+    /* Dokumenten-Upload-Karten (Schritt 3) */
+    .doc-upload-card {
+      border: 1.5px solid var(--border-light);
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
+      background-color: #ffffff;
+      margin-bottom: 14px;
+      transition: var(--transition);
+    }
+
+    .doc-upload-card.has-file {
+      border-color: var(--green-border);
+      background-color: var(--green-tint);
+    }
+
+    .doc-upload-card.needs-attention {
+      border-color: var(--orange-primary);
+      background-color: var(--orange-tint);
+    }
+
+    .doc-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .doc-tag-req {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      background-color: var(--blue-soft);
+      color: var(--blue-dark);
+    }
+
+    .doc-tag-opt {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      background-color: var(--bg-subtle);
+      color: var(--text-muted);
+    }
+
+    .file-pill {
+      margin-top: 12px;
+      padding: 9px 12px;
+      background-color: #ffffff;
+      border: 1px solid var(--green-border);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 0.85rem;
+    }
+
+    /* Zusammenfassungs-Liste */
+    .summary-table {
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 11px 16px;
+      border-bottom: 1px solid var(--border-light);
+      gap: 16px;
+      font-size: 0.9rem;
+    }
+
+    .summary-row:last-child {
+      border-bottom: none;
+    }
+
+    .summary-row:nth-child(even) {
+      background-color: var(--bg-muted);
+    }
+
+    .summary-label {
+      color: var(--text-muted);
+      font-weight: 500;
+      min-width: 170px;
+    }
+
+    .summary-value {
+      color: var(--text-main);
+      font-weight: 600;
+      text-align: right;
+      flex: 1;
+    }
+
+    /* Wartezustand-Hero (Schritt 2 & Schritt 4 nach Terminwahl) */
+    .waiting-hero {
+      background: linear-gradient(135deg, var(--green-tint) 0%, var(--blue-tint) 100%);
+      border: 1.5px solid var(--green-border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 22px;
+    }
+
+    .countdown-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background-color: #ffffff;
+      border: 1px solid var(--blue-border);
+      color: var(--blue-dark);
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: var(--radius-full);
+      margin-bottom: 10px;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 11px 20px;
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: 0.92rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      border: 1.5px solid transparent;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background-color: var(--blue-primary);
+      color: #ffffff;
+      box-shadow: 0 2px 6px rgba(37, 99, 235, 0.22);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--blue-dark);
+      transform: translateY(-1px);
+    }
+
+    .btn-success {
+      background-color: var(--green-primary);
+      color: #ffffff;
+      box-shadow: 0 2px 6px rgba(22, 163, 74, 0.24);
+    }
+
+    .btn-success:hover {
+      background-color: var(--green-emerald);
+      transform: translateY(-1px);
+    }
+
+    .btn-outline {
+      background-color: #ffffff;
+      border-color: var(--border-medium);
+      color: var(--text-main);
+    }
+
+    .btn-outline:hover {
+      background-color: var(--bg-subtle);
+    }
+
+    .btn-sm {
+      padding: 7px 13px;
+      font-size: 0.82rem;
+    }
+
+    /* ==========================================================================
+       KLINIK-BACKOFFICE SIMULATOR (FIXIERT UNTEN, EINKLAPPBAR)
+       ========================================================================== */
+    .simulator-dock {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 50;
+      background-color: #0f172a;
+      color: #f8fafc;
+      border-top: 2px solid #334155;
+      box-shadow: 0 -8px 24px rgba(15, 23, 42, 0.18);
+    }
+
+    .simulator-inner {
+      max-width: 1020px;
+      margin: 0 auto;
+      padding: 12px 20px;
+    }
+
+    .simulator-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .sim-title-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .sim-badge {
+      background-color: #1e293b;
+      border: 1px solid #475569;
+      color: #38bdf8;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 3px 9px;
+      border-radius: var(--radius-full);
+    }
+
+    .sim-body {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid #1e293b;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .sim-dock.collapsed .sim-body {
+      display: none;
+    }
+
+    .sim-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn-sim {
+      background-color: #2563eb;
+      color: #ffffff;
+      border: none;
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 0.83rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-sim:hover {
+      background-color: #3b82f6;
+    }
+
+    .btn-sim-green {
+      background-color: #16a34a;
+    }
+
+    .btn-sim-green:hover {
+      background-color: #22c55e;
+    }
+
+    .btn-sim-orange {
+      background-color: #ea580c;
+    }
+
+    .btn-sim-orange:hover {
+      background-color: #f97316;
+    }
+
+    .btn-sim-ghost {
+      background-color: #1e293b;
+      color: #cbd5e1;
+      border: 1px solid #334155;
+    }
+
+    .btn-sim-ghost:hover {
+      background-color: #334155;
+      color: #ffffff;
+    }
+
+    /* Toast Feedback */
+    .toast {
+      position: fixed;
+      top: 84px;
+      right: 20px;
+      background-color: #0f172a;
+      color: #ffffff;
+      padding: 11px 16px;
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      font-weight: 600;
+      box-shadow: var(--shadow-lg);
+      z-index: 60;
+      opacity: 0;
+      transform: translateY(-8px);
+      pointer-events: none;
+      transition: all 0.22s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-left: 4px solid #4ade80;
+    }
+
+    .toast.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 720px) {
+      .grid-2, .grid-3 {
+        grid-template-columns: 1fr;
+      }
+      .card-header, .card-body, .card-footer {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+      .summary-row {
+        flex-direction: column;
+        gap: 4px;
+      }
+      .summary-value {
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========================================================================
+       HEADER & 4-SCHRITTE-FORTSCHRITTSLEISTE
+       ======================================================================== -->
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+          </svg>
+        </div>
+        <div>
+          <span class="brand-title">Zentrum für Geschlechtsangleichende Chirurgie – Patientenportal</span>
+          <span class="brand-sub">Begleitung vom Erstgespräch bis zur Operation</span>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <div class="greeting-pill" id="headerGreeting">
+          <span class="greeting-dot"></span>
+          <span>Willkommen, Mia</span>
+        </div>
+        <button type="button" class="btn-reset" onclick="resetDemo()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+            <path d="M3 3v5h5"/>
+          </svg>
+          <span>Demo zurücksetzen</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 4-Schritte-Fortschrittsleiste (Bubbles) -->
+    <div class="stepper-section">
+      <nav class="stepper-track" aria-label="Behandlungsfortschritt">
+        <div class="stepper-connector" aria-hidden="true"></div>
+        <div id="bubblesMount" style="display: contents;"></div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ========================================================================
+       HAUPTBEREICH (AKTIV AUSGEWÄHLTER SCHRITT)
+       ======================================================================== -->
+  <main class="main-wrap">
+    <section class="card" id="stepCard" aria-live="polite"></section>
+  </main>
+
+  <!-- ========================================================================
+       KLINIK-BACKOFFICE SIMULATOR (FÜR VORSTANDS-DEMO & DIALOG-TEST)
+       ======================================================================== -->
+  <aside class="simulator-dock" id="simulatorDock" aria-label="Klinik-Backoffice Simulator">
+    <div class="simulator-inner">
+      <div class="simulator-header" onclick="toggleSimulator()">
+        <div class="sim-title-group">
+          <span class="sim-badge">Klinik-Backoffice Simulator</span>
+          <span style="font-size: 0.85rem; font-weight: 600; color: #e2e8f0;">
+            Nächsten Prozessschritt der Klinik auslösen
+          </span>
+        </div>
+        <span id="simToggleText" style="font-size: 0.8rem; color: #94a3b8; font-weight: 600;">Einklappen ▾</span>
+      </div>
+      <div class="sim-body" id="simulatorBody"></div>
+    </div>
+  </aside>
+
+  <!-- Toast Benachrichtigung -->
+  <div class="toast" id="toastBox" role="status"></div>
+
+  <!-- ========================================================================
+       ANWENDUNGSLOGIK
+       ======================================================================== -->
+  <script>
+    // Die 6 möglichen Status-Definitionen
+    const STATUS_META = {
+      "gesperrt": {
+        label: "Gesperrt",
+        cssClass: "status-gesperrt",
+        icon: `<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>`
+      },
+      "offen/aktiv": {
+        label: "Offen / Aktiv",
+        cssClass: "status-offen",
+        icon: `<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`
+      },
+      "daten übermittelt": {
+        label: "Daten übermittelt",
+        cssClass: "status-uebermittelt",
+        icon: `<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`
+      },
+      "in prüfung": {
+        label: "In Prüfung",
+        cssClass: "status-pruefung",
+        icon: `<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>`
+      },
+      "rückfragen/offen/aktiv": {
+        label: "Rückfragen / Offen",
+        cssClass: "status-rueckfragen",
+        icon: `<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`
+      },
+      "abgeschlossen": {
+        label: "Abgeschlossen",
+        cssClass: "status-abgeschlossen",
+        icon: `<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`
+      }
+    };
+
+    const STEP_TITLES = [
+      "Terminanfrage Vorgespräch",
+      "Termin Erstgespräch",
+      "OP-Freigabe",
+      "OP-Termin"
+    ];
+
+    // Ausgangszustand mit sensiblen, realistischen Beispieldaten
+    function createInitialState() {
+      return {
+        viewingStep: 0,
+        simCollapsed: false,
+        stepStatuses: [
+          "offen/aktiv", // Schritt 1: Terminanfrage Vorgespräch
+          "gesperrt",    // Schritt 2: Termin Erstgespräch
+          "gesperrt",    // Schritt 3: OP-Freigabe
+          "gesperrt"     // Schritt 4: OP-Termin
+        ],
+        // Schritt 1 Daten
+        editingStep1: true,
+        legalFirstName: "Maximilian",
+        legalLastName: "Berger",
+        birthDate: "14.05.1996",
+        street: "Lindenstraße 24",
+        zip: "04109",
+        city: "Leipzig",
+        usePreferredName: true,
+        preferredName: "Mia",
+        preferredSalutation: "Frau / sie/ihr",
+        email: "mia.berger@beispiel.de",
+        phone: "+49 176 58291042",
+        insuranceType: "Gesetzlich versichert",
+        insuranceName: "Techniker Krankenkasse (TK)",
+        procedure: "Vaginoplastik",
+        notes: "Ich habe bereits ein psychotherapeutisches Indikationsschreiben in Vorbereitung und wünsche mir eine ausführliche Beratung zum Ablauf.",
+
+        // Schritt 2 Daten (Terminvorschläge Erstgespräch)
+        consultProposals: [
+          {
+            id: "c1",
+            date: "Dienstag, 16. Dezember 2026",
+            time: "10:30 – 11:15 Uhr",
+            doctor: "Dr. med. Elena Hartmann (Oberärztin)",
+            mode: "Vor Ort · Ambulanz Zentrum Ost"
+          },
+          {
+            id: "c2",
+            date: "Donnerstag, 18. Dezember 2026",
+            time: "14:00 – 14:45 Uhr",
+            doctor: "Dr. med. Elena Hartmann (Oberärztin)",
+            mode: "Vor Ort · Ambulanz Zentrum Ost"
+          },
+          {
+            id: "c3",
+            date: "Montag, 21. Dezember 2026",
+            time: "09:15 – 10:00 Uhr",
+            doctor: "Prof. Dr. med. Lukas Lindner",
+            mode: "Videosprechstunde (Telemedizin)"
+          }
+        ],
+        selectedConsultId: "c1",
+
+        // Schritt 3 Daten (Unterlagen OP-Freigabe)
+        docs: {
+          indication: {
+            label: "Indikationsschreiben (Psychotherapie / Psychiatrie)",
+            required: true,
+            sampleName: "Indikationsschreiben_Dr_Keller_2026.pdf",
+            file: null,
+            uploadedAt: null
+          },
+          coverage: {
+            label: "Kostenübernahme-Zusage der Krankenkasse (oder Selbstzahler-Erklärung)",
+            required: true,
+            sampleName: "Kostenuebernahme_TK_Bescheid.pdf",
+            file: null,
+            uploadedAt: null
+          },
+          other: {
+            label: "Sonstige Unterlagen (z. B. Hormonstatus / Endokrinologie, Somatischer Befund)",
+            required: false,
+            sampleName: "Endokrinologie_Laborbefund_Q4.pdf",
+            file: null,
+            uploadedAt: null
+          }
+        },
+        step3Message: "",
+        clinicQueryText: "",
+        step3SubmittedAt: null,
+
+        // Schritt 4 Daten (OP-Terminvorschläge)
+        surgeryProposals: [
+          {
+            id: "s1",
+            admissionDate: "Montag, 15. Februar 2027 · 08:00 Uhr",
+            surgeryDate: "Dienstag, 16. Februar 2027",
+            stayDuration: "ca. 10–12 Tage stationär",
+            surgeon: "Dr. med. Elena Hartmann",
+            daysRemaining: 42
+          },
+          {
+            id: "s2",
+            admissionDate: "Montag, 01. März 2027 · 08:00 Uhr",
+            surgeryDate: "Dienstag, 02. März 2027",
+            stayDuration: "ca. 10–12 Tage stationär",
+            surgeon: "Dr. med. Elena Hartmann",
+            daysRemaining: 56
+          },
+          {
+            id: "s3",
+            admissionDate: "Mittwoch, 17. März 2027 · 08:00 Uhr",
+            surgeryDate: "Donnerstag, 18. März 2027",
+            stayDuration: "ca. 10–12 Tage stationär",
+            surgeon: "Prof. Dr. med. Lukas Lindner",
+            daysRemaining: 72
+          }
+        ],
+        selectedSurgeryId: "s1"
+      };
+    }
+
+    let state = createInitialState();
+
+    // ==========================================================================
+    // DYNAMISCHE ANREDE & NAMENSLOGIK
+    // ==========================================================================
+    function getGreetingInfo() {
+      const lastName = (state.legalLastName || "Berger").trim();
+      const legalFirst = (state.legalFirstName || "Maximilian").trim();
+      const prefFirst = (state.preferredName || "").trim();
+
+      if (state.usePreferredName && prefFirst) {
+        const sal = state.preferredSalutation;
+        if (sal.startsWith("Frau")) {
+          return {
+            headerText: `Willkommen, ${prefFirst}`,
+            formalGreeting: `Liebe Frau ${lastName}`,
+            shortName: prefFirst,
+            pronouns: "sie/ihr"
+          };
+        }
+        if (sal.startsWith("Herr")) {
+          return {
+            headerText: `Willkommen, ${prefFirst}`,
+            formalGreeting: `Lieber Herr ${lastName}`,
+            shortName: prefFirst,
+            pronouns: "er/ihm"
+          };
+        }
+        if (sal.includes("they/them")) {
+          return {
+            headerText: `Willkommen, ${prefFirst}`,
+            formalGreeting: `Hallo ${prefFirst}`,
+            shortName: prefFirst,
+            pronouns: "they/them"
+          };
+        }
+        return {
+          headerText: `Willkommen, ${prefFirst}`,
+          formalGreeting: `Hallo ${prefFirst}`,
+          shortName: prefFirst,
+          pronouns: "keine Pronomen"
+        };
+      }
+
+      // Fallback auf amtlichen Namen, wenn Haken nicht gesetzt ist
+      return {
+        headerText: `Willkommen, ${legalFirst} ${lastName}`,
+        formalGreeting: `Guten Tag ${legalFirst} ${lastName}`,
+        shortName: legalFirst,
+        pronouns: "amtliche Daten"
+      };
+    }
+
+    function updateHeaderGreeting() {
+      const info = getGreetingInfo();
+      const el = document.getElementById("headerGreeting");
+      el.innerHTML = `
+        <span class="greeting-dot"></span>
+        <span>${escapeHtml(info.headerText)}</span>
+      `;
+    }
+
+    // ==========================================================================
+    // TOAST & NAVIGATION
+    // ==========================================================================
+    function showToast(msg) {
+      const toast = document.getElementById("toastBox");
+      toast.textContent = msg;
+      toast.classList.add("visible");
+      clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(() => {
+        toast.classList.remove("visible");
+      }, 2800);
+    }
+
+    function selectBubble(index) {
+      const status = state.stepStatuses[index];
+      if (status === "gesperrt") {
+        showToast("Dieser Schritt ist noch gesperrt. Nutzen Sie unten den Simulator, um ihn freizuschalten.");
+        return;
+      }
+      state.viewingStep = index;
+      renderAll();
+    }
+
+    function resetDemo() {
+      const keepCollapsed = state.simCollapsed;
+      state = createInitialState();
+      state.simCollapsed = keepCollapsed;
+      renderAll();
+      showToast("Demo auf Ausgangszustand zurückgesetzt");
+    }
+
+    function toggleSimulator() {
+      state.simCollapsed = !state.simCollapsed;
+      renderSimulator();
+    }
+
+    // ==========================================================================
+    // RENDERING: 4 BUBBLES
+    // ==========================================================================
+    function renderBubbles() {
+      const mount = document.getElementById("bubblesMount");
+      mount.innerHTML = STEP_TITLES.map((title, idx) => {
+        const statusKey = state.stepStatuses[idx];
+        const meta = STATUS_META[statusKey];
+        const isLocked = statusKey === "gesperrt";
+        const isViewing = state.viewingStep === idx;
+
+        return `
+          <button
+            type="button"
+            class="step-node ${meta.cssClass} ${isLocked ? "is-locked" : ""} ${isViewing ? "is-viewing" : ""}"
+            onclick="selectBubble(${idx})"
+            aria-current="${isViewing ? "step" : "false"}"
+            title="Schritt ${idx + 1}: ${title} (${meta.label})"
+          >
+            <span class="bubble-circle">${meta.icon}</span>
+            <span class="step-title">${idx + 1}. ${title}</span>
+            <span class="status-pill">${meta.label}</span>
+          </button>
+        `;
+      }).join("");
+    }
+
+    // ==========================================================================
+    // RENDERING: SCHRITT 1 – TERMINANFRAGE VORGESPRÄCH
+    // ==========================================================================
+    function renderStep1() {
+      const status = state.stepStatuses[0];
+      const greeting = getGreetingInfo();
+      const isReadOnly = (status === "daten übermittelt" || status === "abgeschlossen") && !state.editingStep1;
+
+      if (isReadOnly) {
+        return `
+          <div class="card-header">
+            <div>
+              <span class="step-kicker">Schritt 1 von 4 · Terminanfrage</span>
+              <h1 class="card-title">Terminanfrage Vorgespräch</h1>
+              <p class="card-subtitle">${escapeHtml(greeting.formalGreeting)}, Ihre Daten wurden erfolgreich an unsere Ambulanz übermittelt.</p>
+            </div>
+            <span class="status-pill" style="background: var(--green-soft); color: var(--green-dark); border: 1px solid var(--green-border);">
+              ${STATUS_META[status].label}
+            </span>
+          </div>
+
+          <div class="card-body">
+            <div class="banner ${status === "abgeschlossen" ? "banner-success" : "banner-info"}">
+              <div class="banner-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              </div>
+              <div>
+                <strong>${status === "abgeschlossen" ? "Anfrage bearbeitet – Terminvorschläge liegen bereit" : "Ihre Anfrage wird aktuell von unserer Terminkoordination gesichtet"}</strong>
+                <div style="margin-top: 3px; font-size: 0.86rem;">
+                  ${status === "abgeschlossen"
+                    ? "Wir haben Ihnen konkrete Terminvorschläge für Ihr Erstgespräch freigeschaltet. Wechseln Sie jetzt zu Schritt 2."
+                    : "Sobald passende Terminvorschläge für Ihr Erstgespräch freigegeben wurden, schaltet sich Schritt 2 automatisch für Sie frei."}
+                </div>
+              </div>
+            </div>
+
+            <div class="summary-table">
+              <div class="summary-row">
+                <span class="summary-label">Ansprache im Portal</span>
+                <span class="summary-value">
+                  ${state.usePreferredName && state.preferredName.trim()
+                    ? `${escapeHtml(state.preferredName)} (${escapeHtml(state.preferredSalutation)})`
+                    : `${escapeHtml(state.legalFirstName)} ${escapeHtml(state.legalLastName)} (wie Ausweis)`}
+                </span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-label">Stammdaten laut Ausweis</span>
+                <span class="summary-value">${escapeHtml(state.legalFirstName)} ${escapeHtml(state.legalLastName)}, geb. ${escapeHtml(state.birthDate)}</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-label">Anschrift</span>
+                <span class="summary-value">${escapeHtml(state.street)}, ${escapeHtml(state.zip)} ${escapeHtml(state.city)}</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-label">Kontakt</span>
+                <span class="summary-value">${escapeHtml(state.email)} · ${escapeHtml(state.phone)}</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-label">Versicherung</span>
+                <span class="summary-value">${escapeHtml(state.insuranceType)}${state.insuranceName ? ` (${escapeHtml(state.insuranceName)})` : ""}</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-label">Gewünschter Eingriff</span>
+                <span class="summary-value">${escapeHtml(state.procedure)}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            ${status !== "abgeschlossen" ? `
+              <button type="button" class="btn btn-outline btn-sm" onclick="state.editingStep1 = true; renderStepCard();">
+                Angaben nachträglich bearbeiten
+              </button>
+            ` : `<span></span>`}
+
+            ${state.stepStatuses[1] !== "gesperrt" ? `
+              <button type="button" class="btn btn-primary" onclick="selectBubble(1)">
+                Weiter zu Schritt 2: Termin Erstgespräch →
+              </button>
+            ` : `
+              <span style="font-size: 0.83rem; color: var(--text-muted);">
+                Tipp: Unten im Simulator „Klinik: Anfrage prüfen &amp; Terminvorschläge senden“ klicken
+              </span>
+            `}
+          </div>
+        `;
+      }
+
+      const salutations = [
+        "Frau / sie/ihr",
+        "Herr / er/ihm",
+        "Keine Anrede (Vorname) / they/them",
+        "Keine Anrede (Vorname) / keine Pronomen"
+      ];
+
+      const procedures = [
+        "Vaginoplastik",
+        "Mastektomie",
+        "Phalloplastik / Metaidoioplastik",
+        "Gesichtsfeminisierung (FFS)",
+        "Sonstiger geschlechtsangleichender Eingriff"
+      ];
+
+      return `
+        <div class="card-header">
+          <div>
+            <span class="step-kicker">Schritt 1 von 4 · Terminanfrage</span>
+            <h1 class="card-title">Terminanfrage Vorgespräch</h1>
+            <p class="card-subtitle">${escapeHtml(greeting.formalGreeting)}, bitte prüfen oder ergänzen Sie Ihre Angaben für das unverbindliche Erstgespräch.</p>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <!-- Abschnitt 1: Stammdaten laut Ausweis -->
+          <div class="section-block">
+            <h2 class="section-heading">1. Stammdaten laut Ausweisdokument</h2>
+            <p class="section-hint">
+              Diese Angaben benötigen wir ausschließlich für die gesetzliche Abrechnung mit Ihrer Krankenkasse und die medizinische Dokumentation.
+            </p>
+            <div class="grid-2" style="margin-bottom: 12px;">
+              <div class="field">
+                <label class="field-label" for="legalFirstInput">Amtlicher Vorname(n) *</label>
+                <input id="legalFirstInput" type="text" class="input" value="${escapeHtml(state.legalFirstName)}" oninput="state.legalFirstName=this.value; updateHeaderGreeting();" />
+              </div>
+              <div class="field">
+                <label class="field-label" for="legalLastInput">Amtlicher Nachname *</label>
+                <input id="legalLastInput" type="text" class="input" value="${escapeHtml(state.legalLastName)}" oninput="state.legalLastName=this.value; updateHeaderGreeting();" />
+              </div>
+              <div class="field">
+                <label class="field-label" for="birthDateInput">Geburtsdatum *</label>
+                <input id="birthDateInput" type="text" class="input" value="${escapeHtml(state.birthDate)}" oninput="state.birthDate=this.value" />
+              </div>
+              <div class="field">
+                <label class="field-label" for="streetInput">Straße &amp; Hausnummer *</label>
+                <input id="streetInput" type="text" class="input" value="${escapeHtml(state.street)}" oninput="state.street=this.value" />
+              </div>
+              <div class="field">
+                <label class="field-label" for="zipInput">PLZ *</label>
+                <input id="zipInput" type="text" class="input" value="${escapeHtml(state.zip)}" oninput="state.zip=this.value" />
+              </div>
+              <div class="field">
+                <label class="field-label" for="cityInput">Ort *</label>
+                <input id="cityInput" type="text" class="input" value="${escapeHtml(state.city)}" oninput="state.city=this.value" />
+              </div>
+            </div>
+
+            <!-- Checkbox: Abweichende Wunschanrede und Wunschname -->
+            <div class="preferred-name-box ${state.usePreferredName ? "is-active" : ""}">
+              <label class="checkbox-header">
+                <input
+                  type="checkbox"
+                  ${state.usePreferredName ? "checked" : ""}
+                  onchange="state.usePreferredName = this.checked; updateHeaderGreeting(); renderStepCard();"
+                />
+                <div>
+                  <strong style="font-size: 0.94rem; color: var(--text-main); display: block;">
+                    Abweichende Wunschanrede und Wunschname
+                  </strong>
+                  <span style="font-size: 0.82rem; color: var(--text-secondary);">
+                    Falls noch keine Personenstandsänderung nach SBGG erfolgt ist: Unser Team und dieses Portal sprechen Sie durchgehend mit Ihrem gewählten Namen und Ihrer Wunschanrede an.
+                  </span>
+                </div>
+              </label>
+
+              ${state.usePreferredName ? `
+                <div class="preferred-fields">
+                  <div class="grid-2">
+                    <div class="field">
+                      <label class="field-label" for="prefNameInput">Wunschname / Rufname *</label>
+                      <input
+                        id="prefNameInput"
+                        type="text"
+                        class="input"
+                        placeholder="z. B. Mia"
+                        value="${escapeHtml(state.preferredName)}"
+                        oninput="state.preferredName=this.value; updateHeaderGreeting(); document.getElementById('livePreviewText').textContent = getGreetingInfo().formalGreeting + ' (' + getGreetingInfo().headerText + ')';"
+                      />
+                    </div>
+                    <div class="field">
+                      <label class="field-label" for="prefSalutationSelect">Wunschanrede / Pronomen</label>
+                      <select
+                        id="prefSalutationSelect"
+                        class="select"
+                        onchange="state.preferredSalutation=this.value; updateHeaderGreeting(); renderStepCard();"
+                      >
+                        ${salutations.map(s => `<option value="${s}" ${state.preferredSalutation === s ? "selected" : ""}>${s}</option>`).join("")}
+                      </select>
+                    </div>
+                  </div>
+                  <div class="live-preview-banner">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    <span>Aktive Ansprache im gesamten Portal: <strong id="livePreviewText">${escapeHtml(greeting.formalGreeting)} (${escapeHtml(greeting.headerText)})</strong></span>
+                  </div>
+                </div>
+              ` : ""}
+            </div>
+          </div>
+
+          <!-- Abschnitt 2: Kontaktdaten & Anliegen -->
+          <div class="section-block">
+            <h2 class="section-heading">2. Kontaktdaten &amp; gewünschter Eingriff</h2>
+            <p class="section-hint">Über diese Kontaktdaten erhalten Sie die Terminvorschläge für Ihr Erstgespräch.</p>
+
+            <div class="grid-2" style="margin-bottom: 12px;">
+              <div class="field">
+                <label class="field-label" for="emailInput">E-Mail-Adresse *</label>
+                <input id="emailInput" type="email" class="input" value="${escapeHtml(state.email)}" oninput="state.email=this.value" />
+              </div>
+              <div class="field">
+                <label class="field-label" for="phoneInput">Telefonnummer *</label>
+                <input id="phoneInput" type="tel" class="input" value="${escapeHtml(state.phone)}" oninput="state.phone=this.value" />
+              </div>
+              <div class="field">
+                <label class="field-label" for="insTypeSelect">Versicherungsart</label>
+                <select id="insTypeSelect" class="select" onchange="state.insuranceType=this.value; renderStepCard();">
+                  <option value="Gesetzlich versichert" ${state.insuranceType === "Gesetzlich versichert" ? "selected" : ""}>Gesetzlich versichert</option>
+                  <option value="Privat versichert" ${state.insuranceType === "Privat versichert" ? "selected" : ""}>Privat versichert</option>
+                  <option value="Selbstzahler*in" ${state.insuranceType === "Selbstzahler*in" ? "selected" : ""}>Selbstzahler*in</option>
+                </select>
+              </div>
+              <div class="field">
+                <label class="field-label" for="insNameInput">Krankenkasse / Kostenträger</label>
+                <input id="insNameInput" type="text" class="input" value="${escapeHtml(state.insuranceName)}" oninput="state.insuranceName=this.value" />
+              </div>
+              <div class="field" style="grid-column: 1 / -1;">
+                <label class="field-label" for="procSelect">Gewünschter Eingriff</label>
+                <select id="procSelect" class="select" onchange="state.procedure=this.value">
+                  ${procedures.map(p => `<option value="${p}" ${state.procedure === p ? "selected" : ""}>${p}</option>`).join("")}
+                </select>
+              </div>
+              <div class="field" style="grid-column: 1 / -1;">
+                <label class="field-label" for="notesInput">Optionale Bemerkungen oder Fragen vorab</label>
+                <textarea id="notesInput" class="textarea" oninput="state.notes=this.value">${escapeHtml(state.notes)}</textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <span style="font-size: 0.82rem; color: var(--text-muted);">
+            Alle Angaben werden DSGVO-konform und vertraulich behandelt.
+          </span>
+          <button type="button" class="btn btn-success" onclick="submitStep1()">
+            Terminanfrage verbindlich absenden ✓
+          </button>
+        </div>
+      `;
+    }
+
+    function submitStep1() {
+      if (!state.legalFirstName.trim() || !state.legalLastName.trim()) {
+        showToast("Bitte geben Sie Ihren amtlichen Vor- und Nachnamen an.");
+        return;
+      }
+      if (state.usePreferredName && !state.preferredName.trim()) {
+        showToast("Bitte geben Sie Ihren Wunschnamen an oder deaktivieren Sie die Option.");
+        return;
+      }
+      state.stepStatuses[0] = "daten übermittelt";
+      state.editingStep1 = false;
+      renderAll();
+      showToast("Terminanfrage erfolgreich übermittelt!");
+    }
+
+    // ==========================================================================
+    // RENDERING: SCHRITT 2 – TERMIN ERSTGESPRÄCH
+    // ==========================================================================
+    function renderStep2() {
+      const status = state.stepStatuses[1];
+      const greeting = getGreetingInfo();
+      const chosenSlot = state.consultProposals.find(c => c.id === state.selectedConsultId) || state.consultProposals[0];
+
+      // Fall A: Noch gesperrt
+      if (status === "gesperrt") {
+        return `
+          <div class="card-header">
+            <div>
+              <span class="step-kicker">Schritt 2 von 4 · Erstgespräch</span>
+              <h1 class="card-title">Termin Erstgespräch</h1>
+              <p class="card-subtitle">Auswahl Ihres persönlichen Beratungstermins</p>
+            </div>
+            <span class="status-pill" style="background: var(--locked-bg); color: var(--locked-primary); border: 1px solid var(--locked-border);">Gesperrt</span>
+          </div>
+          <div class="card-body">
+            <div class="banner banner-locked">
+              <div class="banner-icon">${STATUS_META["gesperrt"].icon}</div>
+              <div>
+                <strong>Dieser Schritt ist aktuell noch gesperrt</strong>
+                <div style="margin-top: 4px; font-size: 0.86rem;">
+                  Bitte senden Sie zuerst in Schritt 1 Ihre Terminanfrage ab. Sobald unsere Koordination Ihre Anfrage geprüft hat, erscheinen hier konkrete Terminvorschläge für Sie.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer">
+            <button type="button" class="btn btn-outline" onclick="selectBubble(0)">← Zurück zu Schritt 1</button>
+            <span></span>
+          </div>
+        `;
+      }
+
+      // Fall B: Offen / Aktiv -> Terminvorschläge auswählen
+      if (status === "offen/aktiv") {
+        return `
+          <div class="card-header">
+            <div>
+              <span class="step-kicker">Schritt 2 von 4 · Erstgespräch</span>
+              <h1 class="card-title">Terminvorschläge für Ihr Erstgespräch</h1>
+              <p class="card-subtitle">${escapeHtml(greeting.formalGreeting)}, bitte wählen Sie einen der folgenden freien Termine für Ihre Beratung (${escapeHtml(state.procedure)}) aus.</p>
+            </div>
+            <span class="status-pill" style="background: var(--blue-soft); color: var(--blue-dark); border: 1px solid var(--blue-border);">Offen / Aktiv</span>
+          </div>
+
+          <div class="card-body">
+            <div class="section-block">
+              <h2 class="section-heading">Verfügbare Termine unserer Sprechstunde</h2>
+              <p class="section-hint">Wählen Sie einen Terminvorschlag per Klick aus und bestätigen Sie Ihre Auswahl unten.</p>
+
+              <div class="grid-3">
+                ${state.consultProposals.map(slot => {
+                  const isSel = slot.id === state.selectedConsultId;
+                  return `
+                    <button
+                      type="button"
+                      class="slot-card ${isSel ? "selected" : ""}"
+                      onclick="state.selectedConsultId='${slot.id}'; renderStepCard();"
+                    >
+                      <span class="slot-badge">${isSel ? "✓ Ausgewählt" : "Terminvorschlag"}</span>
+                      <strong style="font-size: 0.96rem; color: var(--text-main); margin-top: 4px;">${escapeHtml(slot.date)}</strong>
+                      <span style="font-size: 0.88rem; font-weight: 600; color: var(--blue-primary);">${escapeHtml(slot.time)}</span>
+                      <span style="font-size: 0.81rem; color: var(--text-secondary); margin-top: 4px;">${escapeHtml(slot.doctor)}</span>
+                      <span style="font-size: 0.78rem; color: var(--text-muted);">${escapeHtml(slot.mode)}</span>
+                    </button>
+                  `;
+                }).join("")}
+              </div>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <button type="button" class="btn btn-outline" onclick="selectBubble(0)">← Zurück zu Schritt 1</button>
+            <button type="button" class="btn btn-success" onclick="confirmConsultSlot()">
+              Ausgewählten Termin verbindlich bestätigen ✓
+            </button>
+          </div>
+        `;
+      }
+
+      // Fall C: Termin ausgewählt ("daten übermittelt" = Warten auf Termin) oder "abgeschlossen"
+      const isDone = status === "abgeschlossen";
+      return `
+        <div class="card-header">
+          <div>
+            <span class="step-kicker">Schritt 2 von 4 · Erstgespräch</span>
+            <h1 class="card-title">Termin Erstgespräch</h1>
+            <p class="card-subtitle">${isDone ? "Ihr Erstgespräch hat erfolgreich stattgefunden." : "Ihr Termin ist reserviert – wir freuen uns auf das Gespräch mit Ihnen."}</p>
+          </div>
+          <span class="status-pill" style="background: var(--green-soft); color: var(--green-dark); border: 1px solid var(--green-border);">
+            ${STATUS_META[status].label}
+          </span>
+        </div>
+
+        <div class="card-body">
+          <div class="waiting-hero">
+            <span class="countdown-chip">
+              ${isDone ? "✓ Gespräch abgeschlossen" : "⏳ Warten auf Ihren Termin"}
+            </span>
+            <h2 style="font-size: 1.22rem; font-weight: 800; color: var(--text-main);">
+              ${isDone
+                ? `Erstgespräch am ${escapeHtml(chosenSlot.date)} abgeschlossen`
+                : `Ihr Erstgespräch ist reserviert – Warten auf Ihren Termin am ${escapeHtml(chosenSlot.date)}`}
+            </h2>
+            <p style="font-size: 0.91rem; color: var(--text-secondary); margin-top: 6px;">
+              <strong>Uhrzeit:</strong> ${escapeHtml(chosenSlot.time)} · <strong>Ärztliche Leitung:</strong> ${escapeHtml(chosenSlot.doctor)}<br/>
+              <strong>Ort / Format:</strong> ${escapeHtml(chosenSlot.mode)}
+            </p>
+            ${!isDone ? `
+              <div style="margin-top: 14px; display: flex; gap: 10px; flex-wrap: wrap;">
+                <button type="button" class="btn btn-outline btn-sm" onclick="downloadIcsMock('${escapeHtml(chosenSlot.date)}', '${escapeHtml(chosenSlot.time)}')">
+                  📅 Kalendereintrag (.ics) speichern
+                </button>
+                <button type="button" class="btn btn-outline btn-sm" onclick="state.stepStatuses[1]='offen/aktiv'; renderAll();">
+                  Anderen Terminvorschlag wählen
+                </button>
+              </div>
+            ` : ""}
+          </div>
+
+          <div class="section-block">
+            <h3 class="section-heading">Checkliste für Ihr Erstgespräch</h3>
+            <p class="section-hint">Bitte halten Sie folgende Unterlagen zum Termin bereit (falls bereits vorhanden):</p>
+            <div class="summary-table">
+              <div class="summary-row">
+                <span class="summary-label">1. Versichertenkarte</span>
+                <span class="summary-value">Elektronische Gesundheitskarte (${escapeHtml(state.insuranceName || state.insuranceType)})</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-label">2. Überweisungsschein</span>
+                <span class="summary-value">Überweisung an die Chirurgie / Sprechstunde (falls erforderlich)</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-label">3. Vorbefunde &amp; Fragen</span>
+                <span class="summary-value">Ggf. Arztbriefe, Hormonstatus sowie Ihre persönlichen Fragen zum Eingriff</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <button type="button" class="btn btn-outline" onclick="selectBubble(0)">← Schritt 1 ansehen</button>
+          ${state.stepStatuses[2] !== "gesperrt" ? `
+            <button type="button" class="btn btn-primary" onclick="selectBubble(2)">
+              Weiter zu Schritt 3: OP-Freigabe →
+            </button>
+          ` : `
+            <span style="font-size: 0.83rem; color: var(--text-muted);">
+              Tipp: Unten im Simulator „Klinik: Erstgespräch als stattgefunden markieren“ klicken
+            </span>
+          `}
+        </div>
+      `;
+    }
+
+    function confirmConsultSlot() {
+      state.stepStatuses[1] = "daten übermittelt";
+      renderAll();
+      showToast("Erstgespräch-Termin verbindlich reserviert!");
+    }
+
+    function downloadIcsMock(dateStr, timeStr) {
+      const content = [
+        "BEGIN:VCALENDAR",
+        "VERSION:2.0",
+        "PRODID:-//Zentrum fuer Geschlechtsangleichende Chirurgie//Patientenportal//DE",
+        "BEGIN:VEVENT",
+        `SUMMARY:Erstgespraech (${state.procedure})`,
+        `DESCRIPTION:Termin bestaetigt am ${dateStr} (${timeStr})`,
+        "END:VEVENT",
+        "END:VCALENDAR"
+      ].join("\r\n");
+      const blob = new Blob([content], { type: "text/calendar;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "Erstgespraech_Termin.ics";
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast("Kalenderdatei (.ics) heruntergeladen");
+    }
+
+    // ==========================================================================
+    // RENDERING: SCHRITT 3 – OP-FREIGABE (UNTERLAGEN, PRÜFUNG & RÜCKFRAGEN)
+    // ==========================================================================
+    function renderStep3() {
+      const status = state.stepStatuses[2];
+      const greeting = getGreetingInfo();
+
+      // Fall A: Noch gesperrt
+      if (status === "gesperrt") {
+        return `
+          <div class="card-header">
+            <div>
+              <span class="step-kicker">Schritt 3 von 4 · OP-Freigabe</span>
+              <h1 class="card-title">OP-Freigabe &amp; Unterlagen</h1>
+              <p class="card-subtitle">Einreichung von Indikationsschreiben und Kostenübernahme</p>
+            </div>
+            <span class="status-pill" style="background: var(--locked-bg); color: var(--locked-primary); border: 1px solid var(--locked-border);">Gesperrt</span>
+          </div>
+          <div class="card-body">
+            <div class="banner banner-locked">
+              <div class="banner-icon">${STATUS_META["gesperrt"].icon}</div>
+              <div>
+                <strong>Dieser Schritt wird nach Ihrem Erstgespräch freigeschaltet</strong>
+                <div style="margin-top: 4px; font-size: 0.86rem;">
+                  Nach Abschluss des ärztlichen Aufklärungsgesprächs (Schritt 2) können Sie hier bequem Ihr Indikationsschreiben und die Kostenübernahme hochladen.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer">
+            <button type="button" class="btn btn-outline" onclick="selectBubble(1)">← Zurück zu Schritt 2</button>
+            <span></span>
+          </div>
+        `;
+      }
+
+      // Fall B: Offen / Aktiv ODER Rückfragen / Offen / Aktiv -> Upload-Formular aktiv
+      if (status === "offen/aktiv" || status === "rückfragen/offen/aktiv") {
+        const isQuery = status === "rückfragen/offen/aktiv";
+        const docKeys = ["indication", "coverage", "other"];
+
+        return `
+          <div class="card-header">
+            <div>
+              <span class="step-kicker">Schritt 3 von 4 · OP-Freigabe</span>
+              <h1 class="card-title">Unterlagen für die OP-Freigabe einreichen</h1>
+              <p class="card-subtitle">${escapeHtml(greeting.formalGreeting)}, bitte laden Sie die erforderlichen Dokumente für Ihre geplante ${escapeHtml(state.procedure)} hoch.</p>
+            </div>
+            <span class="status-pill" style="${isQuery ? "background: var(--orange-soft); color: #9a3412; border: 1px solid var(--orange-border);" : "background: var(--blue-soft); color: var(--blue-dark); border: 1px solid var(--blue-border);"}">
+              ${STATUS_META[status].label}
+            </span>
+          </div>
+
+          <div class="card-body">
+            ${isQuery ? `
+              <div class="banner banner-orange" role="alert">
+                <div class="banner-icon">${STATUS_META["rückfragen/offen/aktiv"].icon}</div>
+                <div>
+                  <strong>Rückfrage unseres OP-Koordinationsteams</strong>
+                  <div style="margin-top: 4px; font-size: 0.88rem; line-height: 1.5;">
+                    ${escapeHtml(state.clinicQueryText || "Bitte laden Sie noch Seite 2 des psychotherapeutischen Indikationsschreibens mit Unterschrift/Stempel sowie einen aktuellen Laborbefund unter „Sonstige Unterlagen“ hoch.")}
+                  </div>
+                </div>
+              </div>
+            ` : `
+              <div class="banner banner-info">
+                <div class="banner-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                </div>
+                <div>
+                  <strong>Schnell-Test für die Demo:</strong> Sie können pro Dokument entweder eine eigene Datei vom Gerät wählen oder mit einem Klick ein realistisches Muster-PDF anhängen.
+                </div>
+              </div>
+            `}
+
+            <div class="section-block">
+              ${docKeys.map(key => {
+                const doc = state.docs[key];
+                const hasFile = Boolean(doc.file);
+                const highlightQuery = isQuery && (key === "indication" || key === "other");
+
+                return `
+                  <div class="doc-upload-card ${hasFile ? "has-file" : ""} ${highlightQuery ? "needs-attention" : ""}">
+                    <div class="doc-card-top">
+                      <div>
+                        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px;">
+                          <strong style="font-size: 0.95rem; color: var(--text-main);">${escapeHtml(doc.label)}</strong>
+                          <span class="${doc.required ? "doc-tag-req" : "doc-tag-opt"}">
+                            ${doc.required ? "Pflichtdokument" : "Optional / bei Rückfrage"}
+                          </span>
+                        </div>
+                        <span style="font-size: 0.81rem; color: var(--text-muted);">
+                          Erlaubte Formate: PDF, JPG, PNG (max. 25 MB)
+                        </span>
+                      </div>
+
+                      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <button type="button" class="btn btn-outline btn-sm" onclick="simulateDocUpload('${key}')">
+                          + Muster-PDF anhängen
+                        </button>
+                        <label class="btn btn-primary btn-sm" style="cursor: pointer;">
+                          <span>Datei wählen</span>
+                          <input type="file" style="display: none;" onchange="handleRealDocUpload(event, '${key}')" />
+                        </label>
+                      </div>
+                    </div>
+
+                    ${hasFile ? `
+                      <div class="file-pill">
+                        <div style="display: flex; align-items: center; gap: 8px; min-width: 0;">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                          <span style="font-weight: 600; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                            ${escapeHtml(doc.file)}
+                          </span>
+                          <span style="font-size: 0.77rem; color: var(--text-muted);">(${escapeHtml(doc.uploadedAt)})</span>
+                        </div>
+                        <button type="button" style="background: none; border: none; color: #dc2626; font-size: 0.8rem; font-weight: 600; cursor: pointer;" onclick="removeDoc('${key}')">
+                          Entfernen
+                        </button>
+                      </div>
+                    ` : ""}
+                  </div>
+                `;
+              }).join("")}
+            </div>
+
+            <div class="section-block">
+              <label class="field-label" for="step3MsgInput" style="display: block; margin-bottom: 6px;">
+                Optionale Nachricht an das OP-Koordinationsteam
+              </label>
+              <textarea
+                id="step3MsgInput"
+                class="textarea"
+                placeholder="z. B. Hinweis zu nachgereichten Befunden oder Rückfragen..."
+                oninput="state.step3Message=this.value"
+              >${escapeHtml(state.step3Message)}</textarea>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <button type="button" class="btn btn-outline" onclick="selectBubble(1)">← Zurück zu Schritt 2</button>
+            <button type="button" class="btn btn-success" onclick="submitStep3Docs()">
+              Unterlagen zur Prüfung einreichen ✓
+            </button>
+          </div>
+        `;
+      }
+
+      // Fall C: Daten übermittelt ODER In Prüfung
+      if (status === "daten übermittelt" || status === "in prüfung") {
+        const isReviewing = status === "in prüfung";
+        const uploadedList = Object.values(state.docs).filter(d => d.file);
+
+        return `
+          <div class="card-header">
+            <div>
+              <span class="step-kicker">Schritt 3 von 4 · OP-Freigabe</span>
+              <h1 class="card-title">Unterlagen ${isReviewing ? "werden geprüft" : "wurden übermittelt"}</h1>
+              <p class="card-subtitle">${escapeHtml(greeting.formalGreeting)}, vielen Dank für die digitale Einreichung Ihrer Dokumente.</p>
+            </div>
+            <span class="status-pill" style="${isReviewing ? "background: var(--amber-soft); color: #92400e; border: 1px solid var(--amber-border);" : "background: var(--green-soft); color: var(--green-dark); border: 1px solid var(--green-border);"}">
+              ${STATUS_META[status].label}
+            </span>
+          </div>
+
+          <div class="card-body">
+            <div class="banner ${isReviewing ? "banner-amber" : "banner-info"}">
+              <div class="banner-icon">${STATUS_META[status].icon}</div>
+              <div>
+                <strong>${isReviewing ? "Unsere OP-Koordination prüft Ihre Unterlagen auf Vollständigkeit" : "Unterlagen erfolgreich eingegangen – Warten auf Prüfungsstart"}</strong>
+                <div style="margin-top: 4px; font-size: 0.86rem;">
+                  ${isReviewing
+                    ? "Wir kontrollieren Indikationsschreiben, Kostenübernahme und medizinische Vorbefunde. Sollte etwas fehlen, informieren wir Sie hier umgehend mit einer konkreten Rückfrage."
+                    : "Ihre Dokumente liegen unserem Team vor und gehen in Kürze in die fachliche Prüfung."}
+                </div>
+              </div>
+            </div>
+
+            <div class="section-block">
+              <h3 class="section-heading">Eingereichte Dokumente (${uploadedList.length})</h3>
+              <p class="section-hint">Übermittelt am ${escapeHtml(state.step3SubmittedAt || "heute")}</p>
+              <div class="summary-table">
+                ${uploadedList.map(d => `
+                  <div class="summary-row">
+                    <span class="summary-label">${escapeHtml(d.label.split("(")[0].trim())}</span>
+                    <span class="summary-value">📄 ${escapeHtml(d.file)}</span>
+                  </div>
+                `).join("")}
+                ${state.step3Message.trim() ? `
+                  <div class="summary-row">
+                    <span class="summary-label">Ihre Nachricht</span>
+                    <span class="summary-value">${escapeHtml(state.step3Message)}</span>
+                  </div>
+                ` : ""}
+              </div>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <button type="button" class="btn btn-outline" onclick="selectBubble(1)">← Schritt 2 ansehen</button>
+            <span style="font-size: 0.83rem; color: var(--text-muted);">
+              Steuern Sie Prüfung, Rückfrage oder Freigabe unten im Klinik-Simulator
+            </span>
+          </div>
+        `;
+      }
+
+      // Fall D: Abgeschlossen -> OP-Freigabe erteilt!
+      return `
+        <div class="card-header">
+          <div>
+            <span class="step-kicker">Schritt 3 von 4 · OP-Freigabe</span>
+            <h1 class="card-title">OP-Freigabe erteilt</h1>
+            <p class="card-subtitle">${escapeHtml(greeting.formalGreeting)}, alle Unterlagen sind vollständig geprüft und freigegeben.</p>
+          </div>
+          <span class="status-pill" style="background: var(--green-soft); color: var(--green-dark); border: 1px solid var(--green-border);">Abgeschlossen</span>
+        </div>
+
+        <div class="card-body">
+          <div class="banner banner-success">
+            <div class="banner-icon">${STATUS_META["abgeschlossen"].icon}</div>
+            <div>
+              <strong>Alle Unterlagen wurden erfolgreich geprüft und freigegeben!</strong>
+              <div style="margin-top: 4px; font-size: 0.87rem;">
+                Ihr Indikationsschreiben sowie die Kostenübernahme liegen vollständig vor. Sie können nun in Schritt 4 Ihren verbindlichen OP-Termin auswählen.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <button type="button" class="btn btn-outline" onclick="selectBubble(1)">← Schritt 2 ansehen</button>
+          <button type="button" class="btn btn-primary" onclick="selectBubble(3)">
+            Weiter zu Schritt 4: OP-Termin auswählen →
+          </button>
+        </div>
+      `;
+    }
+
+    function simulateDocUpload(key) {
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" }) + " Uhr";
+      state.docs[key].file = state.docs[key].sampleName;
+      state.docs[key].uploadedAt = `heute, ${timeStr}`;
+      renderStepCard();
+      showToast(`Musterdatei „${state.docs[key].sampleName}“ angehängt`);
+    }
+
+    function handleRealDocUpload(event, key) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" }) + " Uhr";
+      state.docs[key].file = file.name;
+      state.docs[key].uploadedAt = `heute, ${timeStr}`;
+      renderStepCard();
+      showToast(`Datei „${file.name}“ angehängt`);
+    }
+
+    function removeDoc(key) {
+      state.docs[key].file = null;
+      state.docs[key].uploadedAt = null;
+      renderStepCard();
+    }
+
+    function submitStep3Docs() {
+      if (!state.docs.indication.file || !state.docs.coverage.file) {
+        showToast("Bitte fügen Sie Indikationsschreiben und Kostenübernahme hinzu (z. B. per Muster-PDF).");
+        return;
+      }
+      const now = new Date();
+      state.step3SubmittedAt = now.toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" }) + " Uhr";
+      state.stepStatuses[2] = "daten übermittelt";
+      renderAll();
+      showToast("Unterlagen erfolgreich zur Prüfung eingereicht!");
+    }
+
+    // ==========================================================================
+    // RENDERING: SCHRITT 4 – OP-TERMIN
+    // ==========================================================================
+    function renderStep4() {
+      const status = state.stepStatuses[3];
+      const greeting = getGreetingInfo();
+      const chosenOp = state.surgeryProposals.find(s => s.id === state.selectedSurgeryId) || state.surgeryProposals[0];
+
+      // Fall A: Noch gesperrt
+      if (status === "gesperrt") {
+        return `
+          <div class="card-header">
+            <div>
+              <span class="step-kicker">Schritt 4 von 4 · Operation</span>
+              <h1 class="card-title">OP-Termin</h1>
+              <p class="card-subtitle">Auswahl Ihres Operationstermins &amp; OP-Vorbereitung</p>
+            </div>
+            <span class="status-pill" style="background: var(--locked-bg); color: var(--locked-primary); border: 1px solid var(--locked-border);">Gesperrt</span>
+          </div>
+          <div class="card-body">
+            <div class="banner banner-locked">
+              <div class="banner-icon">${STATUS_META["gesperrt"].icon}</div>
+              <div>
+                <strong>Dieser Schritt wird nach erfolgreicher OP-Freigabe geöffnet</strong>
+                <div style="margin-top: 4px; font-size: 0.86rem;">
+                  Sobald Ihre Unterlagen in Schritt 3 geprüft und freigegeben wurden, schalten wir Ihnen hier konkrete OP-Termine frei.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer">
+            <button type="button" class="btn btn-outline" onclick="selectBubble(2)">← Zurück zu Schritt 3</button>
+            <span></span>
+          </div>
+        `;
+      }
+
+      // Fall B: Offen / Aktiv -> OP-Terminvorschläge präsentieren
+      if (status === "offen/aktiv") {
+        return `
+          <div class="card-header">
+            <div>
+              <span class="step-kicker">Schritt 4 von 4 · Operation</span>
+              <h1 class="card-title">OP-Terminvorschläge auswählen</h1>
+              <p class="card-subtitle">${escapeHtml(greeting.formalGreeting)}, bitte wählen Sie Ihren Wunschtermin für die stationäre Aufnahme und Operation (${escapeHtml(state.procedure)}).</p>
+            </div>
+            <span class="status-pill" style="background: var(--blue-soft); color: var(--blue-dark); border: 1px solid var(--blue-border);">Offen / Aktiv</span>
+          </div>
+
+          <div class="card-body">
+            <div class="section-block">
+              <h2 class="section-heading">Freie OP-Kapazitäten unseres Operationsteams</h2>
+              <p class="section-hint">Die stationäre Aufnahme erfolgt jeweils einen Tag vor dem eigentlichen OP-Tag.</p>
+
+              <div class="grid-3">
+                ${state.surgeryProposals.map(op => {
+                  const isSel = op.id === state.selectedSurgeryId;
+                  return `
+                    <button
+                      type="button"
+                      class="slot-card ${isSel ? "selected" : ""}"
+                      onclick="state.selectedSurgeryId='${op.id}'; renderStepCard();"
+                    >
+                      <span class="slot-badge">${isSel ? "✓ Ausgewählt" : "OP-Terminvorschlag"}</span>
+                      <span style="font-size: 0.78rem; color: var(--text-muted); margin-top: 4px;">OP-Datum:</span>
+                      <strong style="font-size: 0.98rem; color: var(--text-main);">${escapeHtml(op.surgeryDate)}</strong>
+                      <span style="font-size: 0.81rem; color: var(--blue-primary); font-weight: 600;">Aufnahme: ${escapeHtml(op.admissionDate)}</span>
+                      <span style="font-size: 0.81rem; color: var(--text-secondary); margin-top: 4px;">${escapeHtml(op.surgeon)}</span>
+                      <span style="font-size: 0.78rem; color: var(--text-muted);">${escapeHtml(op.stayDuration)}</span>
+                    </button>
+                  `;
+                }).join("")}
+              </div>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <button type="button" class="btn btn-outline" onclick="selectBubble(2)">← Zurück zu Schritt 3</button>
+            <button type="button" class="btn btn-success" onclick="confirmSurgerySlot()">
+              OP-Termin verbindlich auswählen ✓
+            </button>
+          </div>
+        `;
+      }
+
+      // Fall C: OP-Termin fixiert ("daten übermittelt" = Warten auf OP-Datum) oder "abgeschlossen"
+      const isCompleted = status === "abgeschlossen";
+      return `
+        <div class="card-header">
+          <div>
+            <span class="step-kicker">Schritt 4 von 4 · Operation</span>
+            <h1 class="card-title">${isCompleted ? "Operation erfolgreich durchgeführt" : "Ihr OP-Termin steht fest"}</h1>
+            <p class="card-subtitle">${escapeHtml(greeting.formalGreeting)}, alle Vorbereitungen sind im System hinterlegt.</p>
+          </div>
+          <span class="status-pill" style="background: var(--green-soft); color: var(--green-dark); border: 1px solid var(--green-border);">
+            ${STATUS_META[status].label}
+          </span>
+        </div>
+
+        <div class="card-body">
+          <div class="waiting-hero">
+            <span class="countdown-chip">
+              ${isCompleted ? "✓ Behandlung abgeschlossen" : `⏳ Noch ${chosenOp.daysRemaining} Tage bis zur stationären Aufnahme`}
+            </span>
+            <h2 style="font-size: 1.24rem; font-weight: 800; color: var(--text-main);">
+              ${isCompleted
+                ? `Eingriff (${escapeHtml(state.procedure)}) am ${escapeHtml(chosenOp.surgeryDate)} abgeschlossen`
+                : `Ihr OP-Termin steht fest – Warten auf Ihr Aufnahmedatum am ${escapeHtml(chosenOp.admissionDate)}`}
+            </h2>
+            <p style="font-size: 0.91rem; color: var(--text-secondary); margin-top: 6px;">
+              <strong>Geplanter OP-Tag:</strong> ${escapeHtml(chosenOp.surgeryDate)} · <strong>Operateur*in:</strong> ${escapeHtml(chosenOp.surgeon)}<br/>
+              <strong>Stationärer Aufenthalt:</strong> ${escapeHtml(chosenOp.stayDuration)} · <strong>Ansprache auf Station:</strong> ${escapeHtml(greeting.shortName)} (${escapeHtml(greeting.pronouns)})
+            </p>
+            ${!isCompleted ? `
+              <div style="margin-top: 14px; display: flex; gap: 10px; flex-wrap: wrap;">
+                <button type="button" class="btn btn-outline btn-sm" onclick="downloadIcsMock('${escapeHtml(chosenOp.surgeryDate)}', 'Stationaere Aufnahme ${escapeHtml(chosenOp.admissionDate)}')">
+                  📅 OP-Termin im Kalender speichern (.ics)
+                </button>
+                <button type="button" class="btn btn-outline btn-sm" onclick="state.stepStatuses[3]='offen/aktiv'; renderAll();">
+                  Anderen OP-Termin wählen
+                </button>
+              </div>
+            ` : ""}
+          </div>
+
+          <div class="section-block">
+            <h3 class="section-heading">Präoperative Meilensteine &amp; Aufnahmecheckliste</h3>
+            <p class="section-hint">Diese Schritte begleiten Sie bis zur stationären Aufnahme:</p>
+            <div class="summary-table">
+              <div class="summary-row">
+                <span class="summary-label">14 Tage vor OP</span>
+                <span class="summary-value">Präoperatives Anästhesie-Aufklärungsgespräch &amp; aktuelle Blutabnahme</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-label">7 Tage vor OP</span>
+                <span class="summary-value">Ggf. Pausieren blutverdünnender Medikamente nach ärztlicher Rücksprache</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-label">Am Aufnahmetag</span>
+                <span class="summary-value">Personalausweis, Versichertenkarte, Einweisungsschein &amp; bequeme Kleidung mitbringen</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-label">Direktkontakt OP-Koordination</span>
+                <span class="summary-value">Tel. 0341 / 98 76 54-20 · op-koordination@zentrum-chirurgie.de</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <button type="button" class="btn btn-outline" onclick="selectBubble(2)">← Schritt 3 ansehen</button>
+          <button type="button" class="btn btn-primary" onclick="resetDemo()">
+            Demo von vorne starten ↻
+          </button>
+        </div>
+      `;
+    }
+
+    function confirmSurgerySlot() {
+      state.stepStatuses[3] = "daten übermittelt";
+      renderAll();
+      showToast("OP-Termin verbindlich gebucht!");
+    }
+
+    // ==========================================================================
+    // RENDERING: KLINIK-BACKOFFICE SIMULATOR (KONTEXTBEZOGEN)
+    // ==========================================================================
+    function renderSimulator() {
+      const dock = document.getElementById("simulatorDock");
+      const body = document.getElementById("simulatorBody");
+      const toggleText = document.getElementById("simToggleText");
+
+      dock.classList.toggle("collapsed", state.simCollapsed);
+      toggleText.textContent = state.simCollapsed ? "Ausklappen ▴" : "Einklappen ▾";
+
+      const s = state.stepStatuses;
+      let statusSummary = "";
+      let actionButtons = "";
+
+      if (s[0] === "offen/aktiv") {
+        statusSummary = "Aktueller Stand: Patient*in füllt in Schritt 1 die Terminanfrage aus.";
+        actionButtons = `
+          <button type="button" class="btn-sim btn-sim-green" onclick="submitStep1()">
+            Patient*in: Schritt 1 jetzt absenden
+          </button>
+        `;
+      } else if (s[0] === "daten übermittelt" && s[1] === "gesperrt") {
+        statusSummary = "Aktueller Stand: Terminanfrage eingegangen. Klinik kann nun Terminvorschläge freigeben.";
+        actionButtons = `
+          <button type="button" class="btn-sim btn-sim-green" onclick="simApproveStep1()">
+            Klinik: Anfrage prüfen &amp; Terminvorschläge senden → Schritt 2 öffnen
+          </button>
+        `;
+      } else if (s[1] === "offen/aktiv") {
+        statusSummary = "Aktueller Stand: Patient*in wählt in Schritt 2 einen Erstgespräch-Termin aus.";
+        actionButtons = `
+          <button type="button" class="btn-sim btn-sim-green" onclick="confirmConsultSlot()">
+            Patient*in: Ausgewählten Termin bestätigen
+          </button>
+        `;
+      } else if (s[1] === "daten übermittelt" && s[2] === "gesperrt") {
+        statusSummary = "Aktueller Stand: Erstgespräch-Termin steht fest (Warten auf Datum).";
+        actionButtons = `
+          <button type="button" class="btn-sim btn-sim-green" onclick="simCompleteConsult()">
+            Klinik: Erstgespräch als stattgefunden markieren → Schritt 3 öffnen
+          </button>
+        `;
+      } else if (s[2] === "offen/aktiv" || s[2] === "rückfragen/offen/aktiv") {
+        statusSummary = s[2] === "rückfragen/offen/aktiv"
+          ? "Aktueller Stand: Rückfrage der Klinik aktiv – Patient*in lädt fehlende Dokumente nach."
+          : "Aktueller Stand: Patient*in lädt Unterlagen für die OP-Freigabe hoch.";
+        actionButtons = `
+          <button type="button" class="btn-sim btn-sim-green" onclick="simAutoFillAndSubmitDocs()">
+            Patient*in: Muster-Unterlagen hochladen &amp; einreichen
+          </button>
+        `;
+      } else if (s[2] === "daten übermittelt") {
+        statusSummary = "Aktueller Stand: Unterlagen wurden eingereicht und warten auf Prüfung.";
+        actionButtons = `
+          <button type="button" class="btn-sim" onclick="simStartReviewStep3()">
+            Klinik: Prüfung starten („in prüfung“)
+          </button>
+          <button type="button" class="btn-sim btn-sim-green" onclick="simApproveStep3()">
+            Klinik: Direkt freigeben („abgeschlossen“)
+          </button>
+        `;
+      } else if (s[2] === "in prüfung") {
+        statusSummary = "Aktueller Stand: Unterlagen sind „in prüfung“. Wählen Sie das Prüfergebnis:";
+        actionButtons = `
+          <button type="button" class="btn-sim btn-sim-orange" onclick="simTriggerQueryStep3()">
+            Klinik: Rückfrage auslösen („rückfragen/offen/aktiv“)
+          </button>
+          <button type="button" class="btn-sim btn-sim-green" onclick="simApproveStep3()">
+            Klinik: Unterlagen freigeben („abgeschlossen“ → Schritt 4 öffnen)
+          </button>
+        `;
+      } else if (s[3] === "offen/aktiv") {
+        statusSummary = "Aktueller Stand: OP-Freigabe erteilt. Patient*in wählt in Schritt 4 den OP-Termin.";
+        actionButtons = `
+          <button type="button" class="btn-sim btn-sim-green" onclick="confirmSurgerySlot()">
+            Patient*in: OP-Termin verbindlich auswählen
+          </button>
+        `;
+      } else if (s[3] === "daten übermittelt") {
+        statusSummary = "Aktueller Stand: OP-Termin ist fixiert (Warten auf OP-Datum).";
+        actionButtons = `
+          <button type="button" class="btn-sim btn-sim-green" onclick="simCompleteSurgery()">
+            Klinik: OP erfolgreich abgeschlossen markieren
+          </button>
+        `;
+      } else {
+        statusSummary = "Aktueller Stand: Gesamter Behandlungspfad von Anfrage bis OP abgeschlossen.";
+        actionButtons = `
+          <button type="button" class="btn-sim btn-sim-green" onclick="resetDemo()">
+            Demo neu starten
+          </button>
+        `;
+      }
+
+      body.innerHTML = `
+        <div style="font-size: 0.84rem; color: #cbd5e1;">${statusSummary}</div>
+        <div class="sim-actions">
+          ${actionButtons}
+          <button type="button" class="btn-sim btn-sim-ghost" onclick="resetDemo()">Demo zurücksetzen</button>
+        </div>
+      `;
+    }
+
+    // Simulator-Aktionen
+    function simApproveStep1() {
+      state.stepStatuses[0] = "abgeschlossen";
+      state.stepStatuses[1] = "offen/aktiv";
+      state.viewingStep = 1;
+      renderAll();
+      showToast("Klinik hat Terminvorschläge für das Erstgespräch freigegeben");
+    }
+
+    function simCompleteConsult() {
+      state.stepStatuses[1] = "abgeschlossen";
+      state.stepStatuses[2] = "offen/aktiv";
+      state.viewingStep = 2;
+      renderAll();
+      showToast("Erstgespräch abgeschlossen · Schritt 3 „OP-Freigabe“ geöffnet");
+    }
+
+    function simAutoFillAndSubmitDocs() {
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" }) + " Uhr";
+      if (!state.docs.indication.file) {
+        state.docs.indication.file = state.docs.indication.sampleName;
+        state.docs.indication.uploadedAt = `heute, ${timeStr}`;
+      }
+      if (!state.docs.coverage.file) {
+        state.docs.coverage.file = state.docs.coverage.sampleName;
+        state.docs.coverage.uploadedAt = `heute, ${timeStr}`;
+      }
+      if (state.stepStatuses[2] === "rückfragen/offen/aktiv" && !state.docs.other.file) {
+        state.docs.other.file = state.docs.other.sampleName;
+        state.docs.other.uploadedAt = `heute, ${timeStr}`;
+      }
+      state.step3SubmittedAt = timeStr;
+      state.stepStatuses[2] = "daten übermittelt";
+      state.viewingStep = 2;
+      renderAll();
+      showToast("Unterlagen eingereicht („daten übermittelt“)");
+    }
+
+    function simStartReviewStep3() {
+      state.stepStatuses[2] = "in prüfung";
+      state.viewingStep = 2;
+      renderAll();
+      showToast("Status geändert auf „in prüfung“");
+    }
+
+    function simTriggerQueryStep3() {
+      state.clinicQueryText = "Bitte laden Sie noch Seite 2 des psychotherapeutischen Indikationsschreibens mit Unterschrift/Stempel sowie einen aktuellen endokrinologischen Laborbefund unter „Sonstige Unterlagen“ hoch.";
+      state.stepStatuses[2] = "rückfragen/offen/aktiv";
+      state.viewingStep = 2;
+      renderAll();
+      showToast("Klinik-Rückfrage ausgelöst („rückfragen/offen/aktiv“)");
+    }
+
+    function simApproveStep3() {
+      state.stepStatuses[2] = "abgeschlossen";
+      state.stepStatuses[3] = "offen/aktiv";
+      state.viewingStep = 3;
+      renderAll();
+      showToast("OP-Freigabe erteilt · Schritt 4 „OP-Termin“ geöffnet");
+    }
+
+    function simCompleteSurgery() {
+      state.stepStatuses[3] = "abgeschlossen";
+      state.viewingStep = 3;
+      renderAll();
+      showToast("OP erfolgreich abgeschlossen markiert");
+    }
+
+    // ==========================================================================
+    // GESAMT-RENDERING & HILFSFUNKTIONEN
+    // ==========================================================================
+    function renderStepCard() {
+      const card = document.getElementById("stepCard");
+      switch (state.viewingStep) {
+        case 0: card.innerHTML = renderStep1(); break;
+        case 1: card.innerHTML = renderStep2(); break;
+        case 2: card.innerHTML = renderStep3(); break;
+        case 3: card.innerHTML = renderStep4(); break;
+      }
+    }
+
+    function renderAll() {
+      updateHeaderGreeting();
+      renderBubbles();
+      renderStepCard();
+      renderSimulator();
+    }
+
+    function escapeHtml(str) {
+      return String(str ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    // Initialisierung
+    renderAll();
+  </script>
+</body>
+</html>
