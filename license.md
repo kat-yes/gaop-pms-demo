@@ -21,4 +21,4 @@ the platform does not grant any license or right to use, copy, or modify the
 contents beyond what is strictly necessary to view the hosted page.
 
 For permission requests or inquiries, please contact:
-katja-wirth+gapo-pms-demo@outlook.com
+katja-wirth+gaop-pms-demo@outlook.com

@@ -29,6 +29,12 @@ Die Anwendung ist als einzelne HTML-Datei umgesetzt; HTML, CSS und JavaScript si
 
 Bitte keine echten persönlichen, medizinischen oder sonstigen vertraulichen Daten verwenden.
 
+## Geschäftlicher Kontakt
+
+Bei Interesse an diesem oder einem ähnlichen PMS wenden Sie sich gerne an:
+
+**Katja Wirth** · [katja-wirth+gaop-pms-demo@outlook.com](mailto:katja-wirth+gaop-pms-demo@outlook.com)
+
 ## Lizenz
 
 Für dieses Repository gilt die in [license.md](./license.md) beschriebene „All Rights Reserved“-Regelung. Die Einsicht in das Repository erteilt keine Erlaubnis zum Kopieren, Ändern, Verbreiten oder anderweitigen Nutzen der Inhalte. Für Anfragen ist die dort angegebene Rechteinhaberin zu kontaktieren.

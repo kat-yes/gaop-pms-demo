@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -79,7 +80,8 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      padding-bottom: 120px; /* Platz für fixierten Klinik-Simulator */
+      padding-bottom: 120px;
+      /* Platz für fixierten Klinik-Simulator */
     }
 
     /* ==========================================================================
@@ -275,9 +277,17 @@
     }
 
     @keyframes pulseRing {
-      0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.25); }
-      70% { box-shadow: 0 0 0 7px rgba(37, 99, 235, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+      0% {
+        box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.25);
+      }
+
+      70% {
+        box-shadow: 0 0 0 7px rgba(37, 99, 235, 0);
+      }
+
+      100% {
+        box-shadow: 0 0 0 0 rgba(37, 99, 235, 0);
+      }
     }
 
     /* 3. daten übermittelt */
@@ -390,8 +400,15 @@
     }
 
     @keyframes fadeUp {
-      from { opacity: 0.7; transform: translateY(5px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0.7;
+        transform: translateY(5px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .card-header {
@@ -493,7 +510,9 @@
       color: var(--text-secondary);
     }
 
-    .input, .select, .textarea {
+    .input,
+    .select,
+    .textarea {
       width: 100%;
       padding: 10px 13px;
       border: 1.5px solid var(--border-medium);
@@ -505,7 +524,9 @@
       transition: var(--transition);
     }
 
-    .input:focus, .select:focus, .textarea:focus {
+    .input:focus,
+    .select:focus,
+    .textarea:focus {
       outline: none;
       border-color: var(--blue-primary);
       box-shadow: 0 0 0 3px var(--blue-soft);
@@ -945,6 +966,30 @@
       color: #ffffff;
     }
 
+    .business-contact {
+      border-bottom: 1px solid var(--border-light);
+      background-color: var(--bg-card);
+    }
+
+    .business-contact-inner {
+      max-width: 1020px;
+      margin: 0 auto;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      color: var(--text-secondary);
+      font-size: 0.88rem;
+    }
+
+    .business-contact a {
+      color: var(--green-dark);
+      font-weight: 600;
+      text-underline-offset: 2px;
+    }
+
     /* Toast Feedback */
     .toast {
       position: fixed;
@@ -974,24 +1019,39 @@
     }
 
     @media (max-width: 720px) {
-      .grid-2, .grid-3 {
+
+      .grid-2,
+      .grid-3 {
         grid-template-columns: 1fr;
       }
-      .card-header, .card-body, .card-footer {
+
+      .card-header,
+      .card-body,
+      .card-footer {
         padding-left: 18px;
         padding-right: 18px;
       }
+
       .summary-row {
         flex-direction: column;
         gap: 4px;
       }
+
       .summary-value {
         text-align: left;
       }
     }
   </style>
 </head>
+
 <body>
+
+  <aside class="business-contact" aria-label="Geschäftlicher Kontakt">
+    <div class="business-contact-inner">
+      <p>Interesse an diesem oder einem ähnlichen Patientenmanagementsystem (PMS)?</p>
+      <a href="mailto:katja-wirth+gaop-pms-demo@outlook.com">Katja Wirth · katja-wirth+gaop-pms-demo@outlook.com</a>
+    </div>
+  </aside>
 
   <!-- ========================================================================
        HEADER & 4-SCHRITTE-FORTSCHRITTSLEISTE
@@ -1000,8 +1060,10 @@
     <div class="header-inner">
       <div class="brand">
         <div class="brand-icon" aria-hidden="true">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path
+              d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
           </svg>
         </div>
         <div>
@@ -1016,9 +1078,10 @@
           <span>Willkommen, Mia</span>
         </div>
         <button type="button" class="btn-reset" onclick="resetDemo()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
-            <path d="M3 3v5h5"/>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+            <path d="M3 3v5h5" />
           </svg>
           <span>Demo zurücksetzen</span>
         </button>
@@ -1376,8 +1439,8 @@
                 <strong>${status === "abgeschlossen" ? "Anfrage bearbeitet – Terminvorschläge liegen bereit" : "Ihre Anfrage wird aktuell von unserer Terminkoordination gesichtet"}</strong>
                 <div style="margin-top: 3px; font-size: 0.86rem;">
                   ${status === "abgeschlossen"
-                    ? "Wir haben Ihnen konkrete Terminvorschläge für Ihr Erstgespräch freigeschaltet. Wechseln Sie jetzt zu Schritt 2."
-                    : "Sobald passende Terminvorschläge für Ihr Erstgespräch freigegeben wurden, schaltet sich Schritt 2 automatisch für Sie frei."}
+            ? "Wir haben Ihnen konkrete Terminvorschläge für Ihr Erstgespräch freigeschaltet. Wechseln Sie jetzt zu Schritt 2."
+            : "Sobald passende Terminvorschläge für Ihr Erstgespräch freigegeben wurden, schaltet sich Schritt 2 automatisch für Sie frei."}
                 </div>
               </div>
             </div>
@@ -1387,8 +1450,8 @@
                 <span class="summary-label">Ansprache im Portal</span>
                 <span class="summary-value">
                   ${state.usePreferredName && state.preferredName.trim()
-                    ? `${escapeHtml(state.preferredName)} (${escapeHtml(state.preferredSalutation)})`
-                    : `${escapeHtml(state.legalFirstName)} ${escapeHtml(state.legalLastName)} (wie Ausweis)`}
+            ? `${escapeHtml(state.preferredName)} (${escapeHtml(state.preferredSalutation)})`
+            : `${escapeHtml(state.legalFirstName)} ${escapeHtml(state.legalLastName)} (wie Ausweis)`}
                 </span>
               </div>
               <div class="summary-row">
@@ -1666,8 +1729,8 @@
 
               <div class="grid-3">
                 ${state.consultProposals.map(slot => {
-                  const isSel = slot.id === state.selectedConsultId;
-                  return `
+          const isSel = slot.id === state.selectedConsultId;
+          return `
                     <button
                       type="button"
                       class="slot-card ${isSel ? "selected" : ""}"
@@ -1680,7 +1743,7 @@
                       <span style="font-size: 0.78rem; color: var(--text-muted);">${escapeHtml(slot.mode)}</span>
                     </button>
                   `;
-                }).join("")}
+        }).join("")}
               </div>
             </div>
           </div>
@@ -1715,8 +1778,8 @@
             </span>
             <h2 style="font-size: 1.22rem; font-weight: 800; color: var(--text-main);">
               ${isDone
-                ? `Erstgespräch am ${escapeHtml(chosenSlot.date)} abgeschlossen`
-                : `Ihr Erstgespräch ist reserviert – Warten auf Ihren Termin am ${escapeHtml(chosenSlot.date)}`}
+          ? `Erstgespräch am ${escapeHtml(chosenSlot.date)} abgeschlossen`
+          : `Ihr Erstgespräch ist reserviert – Warten auf Ihren Termin am ${escapeHtml(chosenSlot.date)}`}
             </h2>
             <p style="font-size: 0.91rem; color: var(--text-secondary); margin-top: 6px;">
               <strong>Uhrzeit:</strong> ${escapeHtml(chosenSlot.time)} · <strong>Ärztliche Leitung:</strong> ${escapeHtml(chosenSlot.doctor)}<br/>
@@ -1873,11 +1936,11 @@
 
             <div class="section-block">
               ${docKeys.map(key => {
-                const doc = state.docs[key];
-                const hasFile = Boolean(doc.file);
-                const highlightQuery = isQuery && (key === "indication" || key === "other");
+          const doc = state.docs[key];
+          const hasFile = Boolean(doc.file);
+          const highlightQuery = isQuery && (key === "indication" || key === "other");
 
-                return `
+          return `
                   <div class="doc-upload-card ${hasFile ? "has-file" : ""} ${highlightQuery ? "needs-attention" : ""}">
                     <div class="doc-card-top">
                       <div>
@@ -1919,7 +1982,7 @@
                     ` : ""}
                   </div>
                 `;
-              }).join("")}
+        }).join("")}
             </div>
 
             <div class="section-block">
@@ -1968,8 +2031,8 @@
                 <strong>${isReviewing ? "Unsere OP-Koordination prüft Ihre Unterlagen auf Vollständigkeit" : "Unterlagen erfolgreich eingegangen – Warten auf Prüfungsstart"}</strong>
                 <div style="margin-top: 4px; font-size: 0.86rem;">
                   ${isReviewing
-                    ? "Wir kontrollieren Indikationsschreiben, Kostenübernahme und medizinische Vorbefunde. Sollte etwas fehlen, informieren wir Sie hier umgehend mit einer konkreten Rückfrage."
-                    : "Ihre Dokumente liegen unserem Team vor und gehen in Kürze in die fachliche Prüfung."}
+            ? "Wir kontrollieren Indikationsschreiben, Kostenübernahme und medizinische Vorbefunde. Sollte etwas fehlen, informieren wir Sie hier umgehend mit einer konkreten Rückfrage."
+            : "Ihre Dokumente liegen unserem Team vor und gehen in Kürze in die fachliche Prüfung."}
                 </div>
               </div>
             </div>
@@ -2129,8 +2192,8 @@
 
               <div class="grid-3">
                 ${state.surgeryProposals.map(op => {
-                  const isSel = op.id === state.selectedSurgeryId;
-                  return `
+          const isSel = op.id === state.selectedSurgeryId;
+          return `
                     <button
                       type="button"
                       class="slot-card ${isSel ? "selected" : ""}"
@@ -2144,7 +2207,7 @@
                       <span style="font-size: 0.78rem; color: var(--text-muted);">${escapeHtml(op.stayDuration)}</span>
                     </button>
                   `;
-                }).join("")}
+        }).join("")}
               </div>
             </div>
           </div>
@@ -2179,8 +2242,8 @@
             </span>
             <h2 style="font-size: 1.24rem; font-weight: 800; color: var(--text-main);">
               ${isCompleted
-                ? `Eingriff (${escapeHtml(state.procedure)}) am ${escapeHtml(chosenOp.surgeryDate)} abgeschlossen`
-                : `Ihr OP-Termin steht fest – Warten auf Ihr Aufnahmedatum am ${escapeHtml(chosenOp.admissionDate)}`}
+          ? `Eingriff (${escapeHtml(state.procedure)}) am ${escapeHtml(chosenOp.surgeryDate)} abgeschlossen`
+          : `Ihr OP-Termin steht fest – Warten auf Ihr Aufnahmedatum am ${escapeHtml(chosenOp.admissionDate)}`}
             </h2>
             <p style="font-size: 0.91rem; color: var(--text-secondary); margin-top: 6px;">
               <strong>Geplanter OP-Tag:</strong> ${escapeHtml(chosenOp.surgeryDate)} · <strong>Operateur*in:</strong> ${escapeHtml(chosenOp.surgeon)}<br/>
@@ -2442,4 +2505,5 @@
     renderAll();
   </script>
 </body>
+
 </html>
